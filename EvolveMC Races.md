@@ -14,6 +14,7 @@ With these races you are able to collect Experience Points by doing certain acti
 
 1. Races
 2. Commands
+3. Permissions
 
 <hr>
 
@@ -36,5 +37,21 @@ Blood Sucker 4  | Adaption 4    | Night Owl 4   | Powerful Swings 1
 <hr>
 
 ## Commands
+
+<hr>
+
+## Permissions
+All the permissions used to rule what people can and cannot do
+<hr>
+
+`emcraces.checkothers`
+
+Allows a Player to check the Race and Race Level of another Player
+
+<hr>
+
+`emcraces.setothers`
+
+Allows a Player to set the Race of another Player
 
 <hr>

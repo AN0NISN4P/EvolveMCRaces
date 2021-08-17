@@ -4,3 +4,11 @@ main: me.anoninsnap.evolveraces.EvolveRaces
 api-version: 1.16
 authors: [ anonisnap ]
 description: A Plugin, adding different Races, each with special effects and abilities. Specifically designed for the EvolveMC Minecraft Server
+commands:
+  setrace:
+    description: Set the Race of a player
+    usage: /<command> [player] <race>
+
+  getrace:
+    description: Get the Race of a player
+    usage: /<command> [player]
