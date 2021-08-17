@@ -35,7 +35,7 @@ public class SetRaceCommand implements CommandExecutor {
 
 			} else {
 				// If Player does not have the permission, or didn't specify a player
-				String newRace = args[0];
+				String newRace = args[0].toLowerCase();
 
 				// If race can be set, will inform the player
 				if (PlayerRaceLists.setRace(player, newRace)) {
