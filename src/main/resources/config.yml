@@ -1,0 +1,19 @@
+World:
+  path:
+    speedLevel: 1
+    blocks:
+      - "GRASS_PATH"
+      - "SOULSAND"
+
+Combat:
+  HolyStarBonus: 2
+
+  PvP:
+    DmgModifier: 1.5
+    ResistanceModifier: 0.5
+
+  PvE:
+    DmgModifier: 1.5
+    MobList:
+      - "ZOMBIE"
+      - "SKELETON"
