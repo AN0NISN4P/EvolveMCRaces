@@ -46,7 +46,6 @@ public class GetRaceCommand implements CommandExecutor {
 
 		// Checks if Race has been set. If command was issued by a Commandblock or an issue from the Console forgot the Argument, it will fail
 		if (race != null) {
-			System.out.println("Targeted: " + targeted); //SOUT: Delete Line (Ctrl + Y)
 			String playerTarget;
 
 			// Formalities - TODO: Figure out if this can be customised from a Config File
