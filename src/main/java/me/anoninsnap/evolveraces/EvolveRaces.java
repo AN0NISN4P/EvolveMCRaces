@@ -5,6 +5,7 @@ import me.anoninsnap.evolveraces.commands.GetRaceCommand;
 import me.anoninsnap.evolveraces.commands.SetRaceCommand;
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
 import me.anoninsnap.evolveraces.eventlisteners.PlayerHitListener;
+import me.anoninsnap.evolveraces.eventlisteners.PlayerJoinListener;
 import me.anoninsnap.evolveraces.timedevents.PlayerTimedEffects;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,11 +16,11 @@ public final class EvolveRaces extends JavaPlugin {
 		// Plugin startup logic
 		ConsoleLogger.logToConsole = true;
 
-		// Load races
-		PlayerRaceLists.init();
-
 		// Default Config
 		defaultConfigs();
+
+		// Load races
+		new PlayerRaceLists(getConfig().getConfigurationSection("RaceDefinitions"));
 
 		// Set Commands
 		getCommand("setrace").setExecutor(new SetRaceCommand());
@@ -30,9 +31,11 @@ public final class EvolveRaces extends JavaPlugin {
 		Runnable timedEvents = new PlayerTimedEffects(this);
 		new PlayerHitListener(this);
 
+		// Events
+		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
 		// Schedule Recurring Events
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, timedEvents, 10, 10); // TODO: Config File
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, timedEvents, 10, getConfig().getConfigurationSection("World").getInt("TimeBetweenTicks"));
 	}
 
 	private void defaultConfigs() {

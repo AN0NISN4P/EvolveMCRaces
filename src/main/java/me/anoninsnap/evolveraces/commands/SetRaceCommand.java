@@ -23,6 +23,7 @@ public class SetRaceCommand implements CommandExecutor {
 			if (player.hasPermission("emcraces.setothers") && args.length > 1) {
 				Player target = Bukkit.getPlayer(args[0]);
 				String newRace = args[1].toLowerCase();
+				newRace = newRace.substring(0, 1).toUpperCase() + newRace.substring(1).toLowerCase();
 
 				// If targeted player could be found and Race could be set, informs the players of the event happening
 				if (target != null && PlayerRaceLists.setRace(target, newRace)) {
@@ -36,6 +37,7 @@ public class SetRaceCommand implements CommandExecutor {
 			} else {
 				// If Player does not have the permission, or didn't specify a player
 				String newRace = args[0].toLowerCase();
+				newRace = newRace.substring(0, 1).toUpperCase() + newRace.substring(1).toLowerCase();
 
 				// If race can be set, will inform the player
 				if (PlayerRaceLists.setRace(player, newRace)) {

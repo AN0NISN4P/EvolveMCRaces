@@ -3,6 +3,7 @@ package me.anoninsnap.evolveraces.eventlisteners;
 import me.anoninsnap.evolveraces.EvolveRaces;
 import me.anoninsnap.evolveraces.PlayerRaceLists;
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
+import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -70,8 +71,8 @@ public class PlayerHitListener implements Listener {
 				// PLAYER HITTING PLAYER
 
 				// Check player Race
-				String defenderRace = PlayerRaceLists.getPlayerRace(defender);
-				if (defenderRace != null && defenderRace.equalsIgnoreCase("vampire")) {
+				EvolvedRace defenderRace = PlayerRaceLists.getPlayerRace(defender);
+				if (defenderRace != null && defenderRace.getName().equalsIgnoreCase("vampire")) {
 
 					// Check if hit lands
 					boolean successfulHit = playerHitVampire(attacker, defender, event);

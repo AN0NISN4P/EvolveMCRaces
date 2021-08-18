@@ -1,6 +1,7 @@
 package me.anoninsnap.evolveraces.commands;
 
 import me.anoninsnap.evolveraces.PlayerRaceLists;
+import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,7 +13,7 @@ import org.bukkit.entity.Player;
 public class GetRaceCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		String race = null;
+		EvolvedRace race = null;
 		boolean targeted = false;
 
 		// Find the race when requested by a Player
@@ -54,7 +55,7 @@ public class GetRaceCommand implements CommandExecutor {
 			} else {
 				playerTarget = "You're";
 			}
-			sender.sendMessage(ChatColor.GOLD + playerTarget + ChatColor.WHITE + " currently listed as; " + ChatColor.YELLOW + race);
+			sender.sendMessage(ChatColor.GOLD + playerTarget + ChatColor.WHITE + " currently listed as; " + ChatColor.YELLOW + race.getName());
 		}
 		return true;
 	}

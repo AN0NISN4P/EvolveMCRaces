@@ -1,9 +1,15 @@
 World:
-  path:
-    speedLevel: 1
-    blocks:
+  TimeBetweenTicks: 10
+
+  Path:
+    PotionEffect: "SPEED"
+    EffectLevel: 1
+    Blocks:
       - "GRASS_PATH"
-      - "SOULSAND"
+
+  Race:
+    Vampire:
+      BurnThreshold: 14
 
 Combat:
   HolyStarBonus: 2
@@ -17,3 +23,14 @@ Combat:
     MobList:
       - "ZOMBIE"
       - "SKELETON"
+
+RaceDefinitions:
+  Races:
+    - Human:
+        BaseHealth: 20
+        BaseMovementSpeed: 4
+
+    - Vampire:
+        BaseHealth: 10
+        BaseMovementSpeed: 6
+
