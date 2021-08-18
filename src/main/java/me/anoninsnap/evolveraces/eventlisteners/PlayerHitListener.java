@@ -1,9 +1,12 @@
 package me.anoninsnap.evolveraces.eventlisteners;
 
+import me.anoninsnap.evolveraces.EvolveRaces;
 import me.anoninsnap.evolveraces.PlayerRaceLists;
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -17,7 +20,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PlayerHitListener implements Listener {
@@ -26,17 +30,32 @@ public class PlayerHitListener implements Listener {
 	private Entity e2;
 
 	// Affected Mobs
-	private final EntityType[] mobs = {EntityType.ZOMBIE, EntityType.SKELETON};
-	private final Set<EntityType> bonusDmgMobs = Collections.emptySet();
+	private static Set<EntityType> bonusDmgMobs = new HashSet<>();
 
 	// Damage Values
-	private final double dmgModifierPvP = 1.5d;     //TODO: Config File
-	private final double dmgModifierPvE = 1.5d;     // Config File
-	private final double holyStarBonus = 2d;        // Config File
-	private final double resistanceModifier = 0.5d; // Config File
+	private static double dmgModifierPvP;
+	private static double dmgModifierPvE;
+	private static double holyStarBonus;
+	private static double resistanceModifier;
 
-	public void init() { // TODO: Load values from Config File
-		Collections.addAll(bonusDmgMobs, mobs);
+	public PlayerHitListener(EvolveRaces plugin) {
+		FileConfiguration config = plugin.getConfig();
+		ConfigurationSection combatConfig = config.getConfigurationSection("Combat");
+
+		// Damage Values loaded from Config
+		dmgModifierPvP = combatConfig.getConfigurationSection("PvP").getDouble("DmgModifier");
+		resistanceModifier = combatConfig.getConfigurationSection("PvP").getDouble("ResistanceModifier");
+		dmgModifierPvE = combatConfig.getConfigurationSection("PvE").getDouble("DmgModifier");
+		holyStarBonus = combatConfig.getDouble("HolyStarBonus");
+
+		// Mob List loaded from Config
+		List<?> mobList = combatConfig.getConfigurationSection("PvE").getList("MobList");
+		for (Object mob : mobList) {
+			bonusDmgMobs.add(EntityType.valueOf(mob.toString()));
+		}
+
+		// EventListener Registration
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
@@ -71,6 +90,7 @@ public class PlayerHitListener implements Listener {
 				// Check if mob is supposed to take bonus dmg, and verifyPlayer is holding an item
 				if (bonusDmgMobs.contains(mob.getType()) && heldItem != null) {
 
+
 					// Check if Player is using the correct item
 					Material heltItemType = heldItem.getData().getItemType();
 					if (heltItemType.equals(Material.WOODEN_SWORD) || heltItemType.equals(Material.LEGACY_WOOD_SWORD)) { // FIXME: Legacy item? // TODO: Config Item Modifier
@@ -83,6 +103,10 @@ public class PlayerHitListener implements Listener {
 					}
 
 				}
+				ConsoleLogger.debugLog("PvE: " +
+						ChatColor.RED + attacker.getDisplayName() + ChatColor.RESET + " hit " +
+						ChatColor.RED + mob.getName() + ChatColor.RESET +
+						".\n\tDmg Done: " + event.getFinalDamage());
 			}
 		}
 	}
