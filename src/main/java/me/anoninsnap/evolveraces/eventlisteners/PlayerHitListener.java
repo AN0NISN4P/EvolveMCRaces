@@ -1,23 +1,43 @@
 package me.anoninsnap.evolveraces.eventlisteners;
 
 import me.anoninsnap.evolveraces.PlayerRaceLists;
+import me.anoninsnap.evolveraces.development.ConsoleLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 public class PlayerHitListener implements Listener {
-	EntityType[] mobs = {EntityType.ZOMBIE, EntityType.SKELETON};
-	List<EntityType> bonusDmgMobs = Arrays.asList(mobs);
-	Entity e1;
-	Entity e2;
+	// Entity Variables
+	private Entity e1;
+	private Entity e2;
+
+	// Affected Mobs
+	private final EntityType[] mobs = {EntityType.ZOMBIE, EntityType.SKELETON};
+	private final Set<EntityType> bonusDmgMobs = Collections.emptySet();
+
+	// Damage Values
+	private final double dmgModifierPvP = 1.5d;     //TODO: Config File
+	private final double dmgModifierPvE = 1.5d;     // Config File
+	private final double holyStarBonus = 2d;        // Config File
+	private final double resistanceModifier = 0.5d; // Config File
+
+	public void init() { // TODO: Load values from Config File
+		Collections.addAll(bonusDmgMobs, mobs);
+	}
 
 	@EventHandler
 	public void onEntityDamage(EntityDamageByEntityEvent event) {
@@ -25,39 +45,109 @@ public class PlayerHitListener implements Listener {
 		e1 = event.getDamager();
 		e2 = event.getEntity();
 
-		// Verify it is a Player hitting a Player
-		if (e1 instanceof Player attacker && e2 instanceof Player defender) {
+		// Check if Player is hitting an entity
+		if (e1 instanceof Player attacker) {
+			if (e2 instanceof Player defender) {
+				// PLAYER HITTING PLAYER
 
-			// Check player Race
-			if (PlayerRaceLists.getPlayerRace(defender).equalsIgnoreCase("vampire")) {
+				// Check player Race
+				String defenderRace = PlayerRaceLists.getPlayerRace(defender);
+				if (defenderRace != null && defenderRace.equalsIgnoreCase("vampire")) {
 
-				// Get Weapon
-				ItemStack weapon = attacker.getInventory().getItemInMainHand();
+					// Check if hit lands
+					boolean successfulHit = playerHitVampire(attacker, defender, event);
 
-				// Check Weapon
-				if (weapon.isSimilar(new ItemStack(Material.WOODEN_SWORD))) {
-
-					// Change DMG Amount
-					double dmg = event.getDamage() * 1.2; // TODO: Config DMG Modifier
-					event.setDamage(dmg);
+					// Notify attacker, the vampire has been weakened
+					if (successfulHit) {
+						attacker.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "The Vampire has been Weakened."); // TODO: Special Class for telling players + Config Settings?
+					}
 				}
-			}
-		} else if (e1 instanceof Player player) {
+			} else if (e2 instanceof Mob mob) {
+				// PLAYER HITTING MOB
 
-			// Check Player is hitting a designated mob
-			ItemStack heldItem = player.getInventory().getItemInMainHand();
-			if (bonusDmgMobs.contains(e2.getType()) && heldItem != null) {
+				// Getting held item
+				ItemStack heldItem = getHeldItems(attacker)[0];
 
-				// Check if Player is using the correct item
-				Material heltItemType = heldItem.getData().getItemType();
-				if (heltItemType.equals(Material.WOODEN_SWORD) || heltItemType.equals(Material.LEGACY_WOOD_SWORD)) { // FIXME: Legacy item? // TODO: Config Item Modifier
+				// Check if mob is supposed to take bonus dmg, and verifyPlayer is holding an item
+				if (bonusDmgMobs.contains(mob.getType()) && heldItem != null) {
 
-					// Change DMG Amount
-					double dmg = event.getDamage() * 10.2; // TODO: Config DMG Modifier
-					event.setDamage(dmg);
+					// Check if Player is using the correct item
+					Material heltItemType = heldItem.getData().getItemType();
+					if (heltItemType.equals(Material.WOODEN_SWORD) || heltItemType.equals(Material.LEGACY_WOOD_SWORD)) { // FIXME: Legacy item? // TODO: Config Item Modifier
+
+						// Modify DMG
+						double dmg = event.getDamage() * dmgModifierPvE;
+
+						// Change DMG to modified Value
+						event.setDamage(dmg);
+					}
+
 				}
-
 			}
 		}
+	}
+
+	/**
+	 * Get the items currently held by the Player
+	 *
+	 * @param p Player which items are desired
+	 * @return Array consisting of the item in the Main hand, and item the Offhand
+	 */
+	public ItemStack[] getHeldItems(Player p) {
+		return new ItemStack[]{p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand()};
+	}
+
+	/**
+	 * Logic happening when a Player hits a Vampire
+	 *
+	 * @param attacker Player hitting the Vampire
+	 * @param vampire  Vampire being hit by Player
+	 * @param e        The whole Event, includes the players involved and all dmg information
+	 * @return True unless method breaks
+	 */
+	public boolean playerHitVampire(Player attacker, Player vampire, EntityDamageByEntityEvent e) {
+		double initialDmg = e.getDamage();
+		double modifiedDmg = initialDmg;
+		// Get Weapon
+		ItemStack[] heldItems = getHeldItems(attacker);
+		ItemStack weapon = heldItems[0];
+		ItemStack offhand = heldItems[1];
+
+		// Check Weapon
+		if (weapon != null && (weapon.isSimilar(new ItemStack(Material.WOODEN_SWORD)) || weapon.getData().getItemType().equals(Material.LEGACY_WOOD_SWORD))) {
+			// ALL CHANGES MADE TO THE ATTACK
+
+			// Change DMG Amount
+			modifiedDmg += initialDmg * dmgModifierPvP - initialDmg;
+
+			// Console Log Damage Event (Can be toggled in game using /consolelog on/off)
+			ConsoleLogger.debugLog("PvP: " +
+					ChatColor.RED + attacker.getDisplayName() + ChatColor.RESET + " hit " +
+					ChatColor.RED + vampire.getDisplayName() + ChatColor.RESET +
+					".\n\tDmg Modified: " + initialDmg + " -> " + modifiedDmg);
+
+			// Potion Effects
+			vampire.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 2));
+			vampire.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 200, 1));
+			vampire.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 1));
+		}
+
+		// Check Offhand
+		if (offhand != null && (offhand.isSimilar(new ItemStack(Material.NETHER_STAR)))) {
+			modifiedDmg += holyStarBonus;
+		}
+
+		// Check Resistances
+		ItemStack[] vampireArmour = vampire.getInventory().getArmorContents();
+		if (!Arrays.equals(vampireArmour, new ItemStack[]{null, null, null, null})) {
+			for (ItemStack armourPiece : vampireArmour) {
+				if (armourPiece.getEnchantments().containsKey(Enchantment.PROTECTION_FIRE)) {
+					modifiedDmg -= modifiedDmg * resistanceModifier;
+				}
+			}
+		}
+
+		e.setDamage(modifiedDmg);
+		return true;
 	}
 }
