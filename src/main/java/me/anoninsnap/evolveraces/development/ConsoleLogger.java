@@ -1,6 +1,10 @@
 package me.anoninsnap.evolveraces.development;
 
 
+import org.bukkit.Bukkit;
+
+import java.util.logging.Level;
+
 public class ConsoleLogger {
 	public static boolean logToConsole;
 
@@ -11,7 +15,13 @@ public class ConsoleLogger {
 	 */
 	public static void debugLog(String messageToConsole) {
 		if (logToConsole) {
-			System.out.println(messageToConsole);
+			Bukkit.getLogger().log(Level.INFO, messageToConsole);
+		}
+	}
+
+	public static void warningLog(String messageToConsole) {
+		if (logToConsole) {
+			Bukkit.getLogger().log(Level.WARNING, messageToConsole);
 		}
 	}
 }
