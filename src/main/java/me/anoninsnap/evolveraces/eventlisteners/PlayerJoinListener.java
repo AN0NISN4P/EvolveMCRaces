@@ -23,6 +23,6 @@ public class PlayerJoinListener implements Listener {
 			joinedPlayer.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "Creating the Default Races for you");
 		}
 		ConsoleLogger.debugLog(joinedPlayer.getName() + " has Race: " + hasRace);
-		joinedPlayer.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "You can pick a race with " + ChatColor.AQUA + "/setrace");
+		joinedPlayer.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "You can pick a race with " + ChatColor.AQUA + "/race set <Race>");
 	}
 }

@@ -119,7 +119,7 @@ public class PlayerRaceLists {
 	 * @return Race of the player specified
 	 */
 	public static EvolvedRace getPlayerRace(Player player) {
-		return currentPlayerRace.get(player.getUniqueId());
+		return currentPlayerRace.getOrDefault(player.getUniqueId(), null);
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class PlayerRaceLists {
 	 *
 	 * @return All Races in an Unformatted String
 	 */
-	public static String allRaces() {
-		return allPossibleRaces.toString();
+	public static Set<String> getAllRaces() {
+		return allPossibleRaces.keySet();
 	}
 }
