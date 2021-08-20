@@ -132,6 +132,9 @@ public class PlayerRaceLists {
 	 */
 	public static boolean setRace(Player player, String race) {
 		UUID playerID = player.getUniqueId();
+		if (!allPossibleRaces.containsKey(race) || !player.isOnline()) {
+			return false;
+		}
 
 		// Check if player is currently assigned to a Race
 		if (currentPlayerRace.containsKey(playerID) && !currentPlayerRace.get(playerID).getName().equalsIgnoreCase(race)) {

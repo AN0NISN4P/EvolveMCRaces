@@ -25,9 +25,6 @@ public class SetRaceCommand implements CommandExecutor {
 				Player target = Bukkit.getPlayer(args[0]);
 				newRace = args[1].toLowerCase();
 
-				// Tell Console the race attempted to be attached to Player
-				ConsoleLogger.debugLog(player.getDisplayName() + " will be set to " + newRace);
-
 				// If targeted player could be found and Race could be set, informs the players of the event happening
 				if (target != null && PlayerRaceLists.setRace(target, newRace)) {
 					target.sendMessage(ChatColor.AQUA + "Your Race has been set to " + ChatColor.YELLOW + newRace);
@@ -41,13 +38,9 @@ public class SetRaceCommand implements CommandExecutor {
 				// If Player does not have the permission, or didn't specify a player
 				newRace = args[0].toLowerCase();
 
-				// Tell Console the race attempted to be attached to Player
-				ConsoleLogger.debugLog(player.getDisplayName() + " will be set to " + newRace);
-
-				// If race can be set, will inform the player
+				// Inform the player, whether or not the specified Race cold be set
 				if (PlayerRaceLists.setRace(player, newRace)) {
 					player.sendMessage(ChatColor.AQUA + "Your Race has been set to " + ChatColor.YELLOW + newRace);
-
 				} else {
 					player.sendMessage(ChatColor.RED + "That Race does not appear in our journals.");
 				}
