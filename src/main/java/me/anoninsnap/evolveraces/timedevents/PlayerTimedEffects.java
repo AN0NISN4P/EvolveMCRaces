@@ -3,9 +3,7 @@ package me.anoninsnap.evolveraces.timedevents;
 import me.anoninsnap.evolveraces.EvolveRaces;
 import me.anoninsnap.evolveraces.PlayerRaceLists;
 import me.anoninsnap.evolveraces.effects.CustomEffect;
-import me.anoninsnap.evolveraces.effects.CustomEffectType;
 import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -28,6 +26,7 @@ public class PlayerTimedEffects extends BukkitRunnable implements Listener {
 	private final Server server;
 	private List<Player> onlinePlayers;
 
+	// World Settings
 	private int timeInterval;
 
 	// All Players
@@ -76,14 +75,17 @@ public class PlayerTimedEffects extends BukkitRunnable implements Listener {
 
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
+		PlayerRaceLists.storeCurrentRace(e.getPlayer());
 		onlinePlayers.remove(e.getPlayer());
 	}
 
 	@Override
 	public void run() {
-		for (Player player : onlinePlayers) {
-			addRaceCustomEffects(player);
-			addRacePotionEffects(player);
+		for (Player player : onlinePlayers) { // Can these actions be handled by the EvolvedRace class?
+			EvolvedRace playerRace = PlayerRaceLists.getPlayerRace(player);
+			if (playerRace != null) {
+				playerRace.applyEffects(timeInterval);
+			}
 			addGeneralEffects(player);
 		}
 	}
@@ -92,27 +94,6 @@ public class PlayerTimedEffects extends BukkitRunnable implements Listener {
 		Block blockUnderPlayer = player.getLocation().add(0, -0.7d, 0).getBlock();
 		if (pathBlocks.contains(blockUnderPlayer.getType())) {
 			CustomEffect.apply(player, pathEffect, timeInterval + 5, pathEffectLevel);
-		}
-	}
-
-	public void addRaceCustomEffects(Player player) {
-		EvolvedRace race = PlayerRaceLists.getPlayerRace(player);
-		if (race == null) {
-			return;
-		} else if (race.getName().equalsIgnoreCase("vampire")) {
-			byte skyLightLevel = player.getLocation().getBlock().getLightFromSky();
-			if (skyLightLevel > vampireBurnThreshold) {
-				CustomEffect.apply(player, CustomEffectType.BURN, 40, 0);
-			}
-		}
-	}
-
-	public void addRacePotionEffects(Player player) {
-		EvolvedRace race = PlayerRaceLists.getPlayerRace(player);
-		if (race == null) {
-			return;
-		} else if (race.getName().equalsIgnoreCase("vampire")) {
-			CustomEffect.apply(player, PotionEffectType.INCREASE_DAMAGE, timeInterval + 5, 1);
 		}
 	}
 

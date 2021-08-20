@@ -1,5 +1,6 @@
 package me.anoninsnap.evolveraces;
 
+import me.anoninsnap.evolveraces.commands.AllRacesCommand;
 import me.anoninsnap.evolveraces.commands.ConsoleLogCommand;
 import me.anoninsnap.evolveraces.commands.GetRaceCommand;
 import me.anoninsnap.evolveraces.commands.SetRaceCommand;
@@ -14,7 +15,7 @@ public final class EvolveRaces extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// Plugin startup logic
-		ConsoleLogger.logToConsole = true;
+		ConsoleLogger.LOG_TO_CONSOLE = true;
 
 		// Default Config
 		defaultConfigs();
@@ -23,9 +24,10 @@ public final class EvolveRaces extends JavaPlugin {
 		new PlayerRaceLists(getConfig().getConfigurationSection("RaceDefinitions"));
 
 		// Set Commands
-		getCommand("setrace").setExecutor(new SetRaceCommand());
-		getCommand("getrace").setExecutor(new GetRaceCommand());
+		getCommand("setRace").setExecutor(new SetRaceCommand());
+		getCommand("getRace").setExecutor(new GetRaceCommand());
 		getCommand("consoleLog").setExecutor(new ConsoleLogCommand());
+		getCommand("allRaces").setExecutor(new AllRacesCommand());
 
 		// Start Recurring Events
 		Runnable timedEvents = new PlayerTimedEffects(this);

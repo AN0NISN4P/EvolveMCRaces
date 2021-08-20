@@ -29,8 +29,34 @@ RaceDefinitions:
     - Human:
         BaseHealth: 20
         BaseMovementSpeed: 4
+        Levels:
+          - 1:
+              Buffs:
+              Effects:
+          - 2:
+              Buffs:
+              Effects:
+          - 3:
+              Buffs:
+              Effects:
 
     - Vampire:
         BaseHealth: 10
         BaseMovementSpeed: 6
+        Levels:
+          - 1:
+              Buffs:
+              Effects:
+                - { effect: "BURN", level: 0 }
+          - 2:
+              Buffs:
+                - { buff: "HEALTH_UP", amount: 6 }
+              Effects:
+                - { effect: "BURN", level: 0 }
+                - { effect: "INCREASED_DAMAGE", level: 0 }
+          - 3:
+              Buffs:
+                - { buff: "HEALTH_UP", amount: 10 }
+              Effects:
+                - { effect: "INCREASED_DAMAGE", level: 1 }
 

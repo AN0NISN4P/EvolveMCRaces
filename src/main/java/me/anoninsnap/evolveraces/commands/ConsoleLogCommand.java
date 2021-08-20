@@ -1,7 +1,6 @@
 package me.anoninsnap.evolveraces.commands;
 
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,9 +24,9 @@ public class ConsoleLogCommand implements CommandExecutor {
 		if (sender.isOp() && args.length != 0) {
 			String arg = args[0];
 			if (enable.contains(arg)) {
-				ConsoleLogger.logToConsole = true;
+				ConsoleLogger.LOG_TO_CONSOLE = true;
 			} else if (disable.contains(arg)) {
-				ConsoleLogger.logToConsole = false;
+				ConsoleLogger.LOG_TO_CONSOLE = false;
 			} else {
 				sender.sendMessage(ChatColor.RED + "/consoleLog <true/false>");
 			}

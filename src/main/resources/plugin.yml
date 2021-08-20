@@ -5,14 +5,17 @@ api-version: 1.16
 authors: [ anonisnap ]
 description: A Plugin, adding different Races, each with special effects and abilities. Specifically designed for the EvolveMC Minecraft Server
 commands:
-  setrace:
+  setRace:
     description: Set the Race of a player
     usage: /<command> [player] <race>
 
-  getrace:
+  getRace:
     description: Get the Race of a player
     usage: /<command> [player]
 
   consoleLog:
     description: Change if the plugin should show the Debugging Logs in Console
     usage: /<command> <true/false>
+
+  allRaces:
+    description:

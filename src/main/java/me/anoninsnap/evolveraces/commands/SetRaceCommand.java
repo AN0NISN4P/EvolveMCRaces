@@ -1,6 +1,7 @@
 package me.anoninsnap.evolveraces.commands;
 
 import me.anoninsnap.evolveraces.PlayerRaceLists;
+import me.anoninsnap.evolveraces.development.ConsoleLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,12 +19,14 @@ public class SetRaceCommand implements CommandExecutor {
 
 		// Set Race for a Player
 		if (sender instanceof Player player) {
-
+			String newRace;
 			// Check Permission to set race AND check if a Player has been specified
 			if (player.hasPermission("emcraces.setothers") && args.length > 1) {
 				Player target = Bukkit.getPlayer(args[0]);
-				String newRace = args[1].toLowerCase();
-				newRace = newRace.substring(0, 1).toUpperCase() + newRace.substring(1).toLowerCase();
+				newRace = args[1].toLowerCase();
+
+				// Tell Console the race attempted to be attached to Player
+				ConsoleLogger.debugLog(player.getDisplayName() + " will be set to " + newRace);
 
 				// If targeted player could be found and Race could be set, informs the players of the event happening
 				if (target != null && PlayerRaceLists.setRace(target, newRace)) {
@@ -36,8 +39,10 @@ public class SetRaceCommand implements CommandExecutor {
 
 			} else {
 				// If Player does not have the permission, or didn't specify a player
-				String newRace = args[0].toLowerCase();
-				newRace = newRace.substring(0, 1).toUpperCase() + newRace.substring(1).toLowerCase();
+				newRace = args[0].toLowerCase();
+
+				// Tell Console the race attempted to be attached to Player
+				ConsoleLogger.debugLog(player.getDisplayName() + " will be set to " + newRace);
 
 				// If race can be set, will inform the player
 				if (PlayerRaceLists.setRace(player, newRace)) {
@@ -49,7 +54,7 @@ public class SetRaceCommand implements CommandExecutor {
 			}
 
 		} else {
-			System.out.println("Action can only be done In-game"); // TODO: Implement Setting of a Race from Console
+			ConsoleLogger.debugLog("Action can only be done In-game"); // TODO: Implement Setting of a Race from Console
 		}
 
 
