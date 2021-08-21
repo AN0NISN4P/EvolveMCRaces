@@ -45,10 +45,10 @@ public class EvolvedRace {
 		activePotionEffect = new HashMap<>();
 	}
 
-	public EvolvedRace(Player player, String raceName, int raceLevel, double baseHealth, float baseMovementSpeed, List<Map<String, List<?>>> levelUpgrades) {
+	public EvolvedRace(Player player, String raceName, double baseHealth, float baseMovementSpeed, List<Map<String, List<?>>> levelUpgrades) {
 		this.player = player;
 		this.raceName = raceName;
-		this.raceLevel = raceLevel;
+		this.raceLevel = 0;
 		this.baseHealth = baseHealth;
 		this.baseMovementSpeed = baseMovementSpeed;
 		this.levelUpgrades = levelUpgrades;
@@ -88,7 +88,7 @@ public class EvolvedRace {
 	 * @return EvolvedRace of same type with level specified in method arguments
 	 */
 	public EvolvedRace cloneToPlayer(Player player, Integer level) {
-		EvolvedRace clone = new EvolvedRace(player, raceName, 0, baseHealth, baseMovementSpeed, levelUpgrades);
+		EvolvedRace clone = new EvolvedRace(player, raceName, baseHealth, baseMovementSpeed, levelUpgrades);
 		clone.levelUp(level);
 		return clone;
 	}
@@ -109,6 +109,8 @@ public class EvolvedRace {
 	}
 
 	public void levelUp(int levels) {
+		ConsoleLogger.debugLog("Level: " + ChatColor.DARK_GREEN + raceLevel);
+
 		// Set level to the actual level
 		raceLevel += levels;
 
@@ -117,10 +119,10 @@ public class EvolvedRace {
 		activeCustomEffect.clear();
 
 		// Get Buffs and Effects from Config
-		List<LinkedHashMap<String, ?>> buffs = (List<LinkedHashMap<String, ?>>) levelUpgrades.get(raceLevel).get("Buffs");
-		List<LinkedHashMap<String, ?>> effects = (List<LinkedHashMap<String, ?>>) levelUpgrades.get(raceLevel).get("Effects");
+		List<LinkedHashMap<String, ?>> buffs = (List<LinkedHashMap<String, ?>>) levelUpgrades.get(raceLevel - 1).get("Buffs");
+		List<LinkedHashMap<String, ?>> effects = (List<LinkedHashMap<String, ?>>) levelUpgrades.get(raceLevel - 1).get("Effects");
 
-		ConsoleLogger.debugLog("Buffs: " + ChatColor.GREEN + buffs);
+		ConsoleLogger.debugLog("Level: " + ChatColor.GREEN + raceLevel);
 
 		// Check for buffs
 		if (buffs != null && buffs.size() != 0) {
@@ -133,17 +135,16 @@ public class EvolvedRace {
 		if (effects != null && effects.size() != 0) {
 			// Loop through all Effects and apply if possible
 			for (LinkedHashMap<String, ?> effect : effects) {
-				// Get effect type
-				String effectType = effect.keySet().toArray()[0].toString();
 				// Check if Effect Type is a Vanilla Potion
-				if (PotionEffectType.getByName(effectType) != null) {
-					activePotionEffect.put(PotionEffectType.getByName(effectType), (Integer) effect.get(effectType));
+				ConsoleLogger.debugLog(effect.entrySet().toString());
+				if (PotionEffectType.getByName((String) effect.get("effect")) != null) {
+					activePotionEffect.put(PotionEffectType.getByName((String) effect.get("effect")), (Integer) effect.get("level"));
 				} else {
 					// Attempt to add a Custom Effect to the Custom Effect List
 					try {
-						activeCustomEffect.put(Enum.valueOf(CustomEffectType.class, effectType), (Integer) effect.get(effectType));
+						activeCustomEffect.put(Enum.valueOf(CustomEffectType.class, (String) effect.get("effect")), (Integer) effect.get("level"));
 					} catch (Exception e) {
-						ConsoleLogger.warningLog("Effect could not be found: " + effectType);
+						ConsoleLogger.warningLog("Effect could not be found: " + effect.get("effect"));
 					}
 				}
 			}

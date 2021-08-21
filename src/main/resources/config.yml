@@ -55,9 +55,9 @@ RaceDefinitions:
                 - { buff: "HEALTH_UP", amount: 6 }
               Effects:
                 - { effect: "BURN", level: 0 }
-                - { effect: "INCREASED_DAMAGE", level: 0 }
+                - { effect: "INCREASE_DAMAGE", level: 0 }
           - 3:
               Buffs:
                 - { buff: "HEALTH_UP", amount: 10 }
               Effects:
-                - { effect: "INCREASED_DAMAGE", level: 1 }
+                - { effect: "INCREASE_DAMAGE", level: 1 }

@@ -13,6 +13,7 @@ public final class EvolveRaces extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// Plugin startup logic
+
 		// Default Config
 		defaultConfigs();
 

@@ -35,9 +35,6 @@ public class PlayerTimedEffects extends BukkitRunnable implements Listener {
 	private int pathEffectLevel;
 	private PotionEffectType pathEffect;
 
-	// Race Specifics
-	private int vampireBurnThreshold;
-
 	public PlayerTimedEffects(EvolveRaces plugin) {
 		onlinePlayers = new ArrayList<>();
 		this.plugin = plugin;
@@ -65,7 +62,7 @@ public class PlayerTimedEffects extends BukkitRunnable implements Listener {
 		}
 
 		// Race Config
-		vampireBurnThreshold = races.getConfigurationSection("Vampire").getInt("BurnThreshold");
+		CustomEffect.burnLightLevel = races.getConfigurationSection("Vampire").getInt("BurnThreshold");
 	}
 
 	@EventHandler
