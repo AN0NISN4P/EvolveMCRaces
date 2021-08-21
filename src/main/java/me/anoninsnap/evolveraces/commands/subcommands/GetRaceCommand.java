@@ -27,7 +27,11 @@ public class GetRaceCommand implements SubCommand {
 	@Override
 	public void perform(Player p, String[] args) {
 		if (args.length == 1) {
-			p.sendMessage(ChatColor.YELLOW + "You're currently a " + PlayerRaceLists.getPlayerRace(p));
+			if (PlayerRaceLists.getPlayerRace(p) == null) {
+				p.sendMessage(ChatColor.YELLOW + "You're currently not listed into any of the known races.");
+			} else {
+				p.sendMessage(ChatColor.YELLOW + "You're currently a " + PlayerRaceLists.getPlayerRace(p));
+			}
 		} else if (args.length == 2) {
 			Player target = Bukkit.getPlayer(args[1]);
 			if (target == null) {

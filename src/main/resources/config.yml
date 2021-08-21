@@ -1,3 +1,5 @@
+DebugConsole: false
+
 World:
   TimeBetweenTicks: 10
 
@@ -42,7 +44,7 @@ RaceDefinitions:
 
     - Vampire:
         BaseHealth: 10
-        BaseMovementSpeed: 6
+        BaseMovementSpeed: 5
         Levels:
           - 1:
               Buffs:
@@ -59,4 +61,3 @@ RaceDefinitions:
                 - { buff: "HEALTH_UP", amount: 10 }
               Effects:
                 - { effect: "INCREASED_DAMAGE", level: 1 }
-

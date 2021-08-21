@@ -79,9 +79,9 @@ public class PlayerRaceLists {
 		for (LinkedHashMap<String, LinkedHashMap<String, ?>> raceDefinition : raceDefinitions) {
 			String raceName = raceDefinition.keySet().toArray()[0].toString();
 			EvolvedRace evolvedRace = new EvolvedRace(raceName, raceDefinition.get(raceName));
-			ConsoleLogger.debugLog(evolvedRace.toString());
 			allPossibleRaces.put(raceName.toLowerCase(), evolvedRace);
 		}
+		ConsoleLogger.debugLog(ChatColor.DARK_AQUA + "Races Loaded: " + ChatColor.AQUA + allPossibleRaces.size());
 	}
 
 	/**
@@ -105,7 +105,6 @@ public class PlayerRaceLists {
 	 */
 	private static EvolvedRace defaultRace(Player player, String raceName) {
 		ConsoleLogger.debugLog(ChatColor.DARK_BLUE + "Creating race: " + ChatColor.BLUE + raceName);
-		ConsoleLogger.debugLog(ChatColor.DARK_AQUA + "Available Races: " + ChatColor.AQUA + allPossibleRaces);
 
 		storedPlayerRaces.putIfAbsent(player.getUniqueId(), new HashMap<>());
 		storedPlayerRaces.get(player.getUniqueId()).putIfAbsent(raceName, allPossibleRaces.get(raceName).cloneToPlayer(player));
@@ -140,8 +139,14 @@ public class PlayerRaceLists {
 		if (currentPlayerRace.containsKey(playerID) && !currentPlayerRace.get(playerID).getName().equalsIgnoreCase(race)) {
 			// PLAYER HAS CURRENT RACE
 
+			// If player attempts to swap to current Race
+			if (getPlayerRace(player).getName().equalsIgnoreCase(race)) {
+				return false;
+			}
+
 			// Temporarily save current race
 			EvolvedRace curr = currentPlayerRace.get(playerID);
+			curr.disable();
 
 			// Check for stored race to replace
 			if (storedPlayerRaces.containsKey(playerID) && storedPlayerRaces.get(playerID).containsKey(race)) {
@@ -174,6 +179,7 @@ public class PlayerRaceLists {
 			}
 		}
 
+		getPlayerRace(player).init();
 		return true;
 	}
 
