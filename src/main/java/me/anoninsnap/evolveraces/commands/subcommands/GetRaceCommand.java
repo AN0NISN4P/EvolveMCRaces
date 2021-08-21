@@ -2,6 +2,7 @@ package me.anoninsnap.evolveraces.commands.subcommands;
 
 import me.anoninsnap.evolveraces.PlayerRaceLists;
 import me.anoninsnap.evolveraces.commands.SubCommand;
+import me.anoninsnap.evolveraces.development.ConsoleLogger;
 import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,6 +32,7 @@ public class GetRaceCommand implements SubCommand {
 				p.sendMessage(ChatColor.YELLOW + "You're currently not listed into any of the known races.");
 			} else {
 				p.sendMessage(ChatColor.YELLOW + "You're currently a " + PlayerRaceLists.getPlayerRace(p));
+				ConsoleLogger.debugLog(ChatColor.RED + p.getDisplayName() + " has these Races stored " + PlayerRaceLists.getStoredRaces(p));
 			}
 		} else if (args.length == 2) {
 			Player target = Bukkit.getPlayer(args[1]);

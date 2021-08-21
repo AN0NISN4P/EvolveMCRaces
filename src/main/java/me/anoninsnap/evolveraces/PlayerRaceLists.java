@@ -2,6 +2,7 @@ package me.anoninsnap.evolveraces;
 
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
 import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -136,16 +137,17 @@ public class PlayerRaceLists {
 		}
 
 		// Check if player is currently assigned to a Race
-		if (currentPlayerRace.containsKey(playerID) && !currentPlayerRace.get(playerID).getName().equalsIgnoreCase(race)) {
+		if (currentPlayerRace.containsKey(playerID)) {
 			// PLAYER HAS CURRENT RACE
 
 			// If player attempts to swap to current Race
 			if (getPlayerRace(player).getName().equalsIgnoreCase(race)) {
-				return false;
+				return true;
 			}
 
 			// Temporarily save current race
 			EvolvedRace curr = currentPlayerRace.get(playerID);
+			ConsoleLogger.debugLog(ChatColor.YELLOW + "Storing " + curr.getName() + " for player " + player.getName());
 			curr.disable();
 
 			// Check for stored race to replace
@@ -161,7 +163,7 @@ public class PlayerRaceLists {
 				currentPlayerRace.replace(playerID, defaultRace(player, race));
 			}
 			// Store temp race
-			storedPlayerRaces.get(playerID).replace(race, curr);
+			storedPlayerRaces.get(playerID).put(curr.getName(), curr);
 		} else {
 			// PLAYER HAS NO CURRENT RACE
 
@@ -191,7 +193,7 @@ public class PlayerRaceLists {
 	public static void storeCurrentRace(Player player) {
 		UUID playerID = player.getUniqueId();
 		if (currentPlayerRace.containsKey(playerID)) {
-			storedPlayerRaces.get(playerID).replace(currentPlayerRace.get(playerID).getName(), currentPlayerRace.get(playerID));
+			storedPlayerRaces.get(playerID).put(currentPlayerRace.get(playerID).getName(), currentPlayerRace.get(playerID));
 		}
 	}
 

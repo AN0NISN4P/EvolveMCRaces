@@ -5,6 +5,7 @@ import me.anoninsnap.evolveraces.effects.CustomBuffType;
 import me.anoninsnap.evolveraces.effects.CustomEffect;
 import me.anoninsnap.evolveraces.effects.CustomEffectType;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -172,7 +173,16 @@ public class EvolvedRace {
 	 * Applies the Race Stats to the Player
 	 */
 	private void applyStats() {
-		player.setHealthScale(baseHealth);
+		if (player.getMaxHealth() > baseHealth) {
+			// HP goes down
+			player.setHealth(baseHealth);
+			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseHealth);
+		} else {
+			// HP goes up
+			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseHealth);
+			player.setHealth(baseHealth);
+		}
+
 		player.setWalkSpeed(baseMovementSpeed);
 	}
 
@@ -190,6 +200,18 @@ public class EvolvedRace {
 	 * Disables the Race, setting it as the Inactive Race
 	 */
 	public void disable() {
+		player.setHealthScale(20);
 		active = false;
+	}
+
+	/**
+	 * Sets the Race Level 1 below the specified value, then runs the levelUp() method to reach the correct Level
+	 *
+	 * @param lvl Level to set the Race to
+	 */
+	public void setLevel(int lvl) {
+		assert player != null;
+		raceLevel = lvl - 1;
+		levelUp();
 	}
 }

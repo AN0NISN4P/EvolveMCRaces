@@ -14,8 +14,7 @@ public class PlayerJoinListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		Player joinedPlayer = e.getPlayer();
 
-		ConsoleLogger.debugLog(joinedPlayer + " has race: " + PlayerRaceLists.hasAnyRace(joinedPlayer));
-		ConsoleLogger.debugLog(PlayerRaceLists.getStoredRaces());
+		joinedPlayer.setInvulnerable(false);
 
 		boolean hasRace = PlayerRaceLists.hasAnyRace(joinedPlayer);
 		if (!hasRace) {

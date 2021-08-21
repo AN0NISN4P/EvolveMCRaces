@@ -18,7 +18,10 @@ public class CommandManager implements CommandExecutor {
 		subCommands.add(new ConsoleDebugCommand());
 		subCommands.add(new GetRaceCommand());
 		subCommands.add(new HelpCommand());
+		subCommands.add(new SetLevelCommand());
 		subCommands.add(new SetRaceCommand());
+
+		subCommands.add(new DEBUGCOMMAND());
 	}
 
 	@Override

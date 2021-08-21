@@ -19,6 +19,6 @@ public class CustomEffect {
 
 	private static void burn(Player p, int t, int v){
 		if (p.getLocation().getBlock().getLightLevel() > burnLightLevel && p.getLocation().getBlock().getLightFromSky() > burnLightLevel)
-		p.setFireTicks(t);
+		p.setFireTicks(Math.max(t, 21));
 	}
 }
