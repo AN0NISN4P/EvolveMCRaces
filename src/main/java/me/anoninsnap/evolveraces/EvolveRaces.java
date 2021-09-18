@@ -2,6 +2,7 @@ package me.anoninsnap.evolveraces;
 
 import me.anoninsnap.evolveraces.commands.CommandManager;
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
+import me.anoninsnap.evolveraces.eventlisteners.PlayerInteractListener;
 import me.anoninsnap.evolveraces.eventlisteners.PlayerHitListener;
 import me.anoninsnap.evolveraces.eventlisteners.PlayerJoinListener;
 import me.anoninsnap.evolveraces.timedevents.PlayerTimedEffects;
@@ -29,6 +30,7 @@ public final class EvolveRaces extends JavaPlugin {
 
 		// Events
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
 
 		// Schedule Recurring Events
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, timedEvents, 10, getConfig().getConfigurationSection("World").getInt("TimeBetweenTicks"));

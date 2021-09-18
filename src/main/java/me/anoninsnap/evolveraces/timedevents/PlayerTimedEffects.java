@@ -2,7 +2,7 @@ package me.anoninsnap.evolveraces.timedevents;
 
 import me.anoninsnap.evolveraces.EvolveRaces;
 import me.anoninsnap.evolveraces.PlayerRaceLists;
-import me.anoninsnap.evolveraces.effects.CustomEffect;
+import me.anoninsnap.evolveraces.raceclasses.effects.CustomEffect;
 import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
 import org.bukkit.Material;
 import org.bukkit.Server;

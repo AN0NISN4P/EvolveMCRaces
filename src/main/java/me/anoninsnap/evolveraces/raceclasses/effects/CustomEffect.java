@@ -1,4 +1,4 @@
-package me.anoninsnap.evolveraces.effects;
+package me.anoninsnap.evolveraces.raceclasses.effects;
 
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;

@@ -1,4 +1,4 @@
-package me.anoninsnap.evolveraces.effects;
+package me.anoninsnap.evolveraces.raceclasses.effects;
 
 public enum CustomBuffType {
 	HEALTH_UP,

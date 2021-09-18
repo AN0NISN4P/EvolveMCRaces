@@ -1,9 +1,11 @@
 package me.anoninsnap.evolveraces.raceclasses;
 
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
-import me.anoninsnap.evolveraces.effects.CustomBuffType;
-import me.anoninsnap.evolveraces.effects.CustomEffect;
-import me.anoninsnap.evolveraces.effects.CustomEffectType;
+import me.anoninsnap.evolveraces.raceclasses.abilities.CustomAbility;
+import me.anoninsnap.evolveraces.raceclasses.abilities.CustomAbilityType;
+import me.anoninsnap.evolveraces.raceclasses.effects.CustomBuffType;
+import me.anoninsnap.evolveraces.raceclasses.effects.CustomEffect;
+import me.anoninsnap.evolveraces.raceclasses.effects.CustomEffectType;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -21,6 +23,8 @@ public class EvolvedRace {
 
 	private Map<CustomEffectType, Integer> activeCustomEffect;
 	private Map<PotionEffectType, Integer> activePotionEffect;
+
+	private CustomAbility ability = new CustomAbility(CustomAbilityType.DASH, 10);
 
 	private boolean active;
 
@@ -213,5 +217,9 @@ public class EvolvedRace {
 		assert player != null;
 		raceLevel = lvl - 1;
 		levelUp();
+	}
+
+	public void useAbility() {
+		ability.use(player);
 	}
 }
