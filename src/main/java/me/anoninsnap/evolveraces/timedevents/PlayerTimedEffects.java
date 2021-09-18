@@ -56,7 +56,7 @@ public class PlayerTimedEffects extends BukkitRunnable implements Listener {
 
 		// Path Config
 		pathEffect = PotionEffectType.getByName(paths.getString("PotionEffect"));
-		pathEffectLevel = paths.getInt("EffectLevel");
+		pathEffectLevel = paths.getInt("EffectLevel") - 1;
 		for (Object block : paths.getList("Blocks")) {
 			pathBlocks.add(Material.valueOf(block.toString()));
 		}
