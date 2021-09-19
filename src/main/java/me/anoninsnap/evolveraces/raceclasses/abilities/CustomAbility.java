@@ -9,7 +9,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 //TODO:
 // Config File
@@ -79,33 +80,61 @@ public class CustomAbility {
 	private boolean claw(Player p) { // TODO: Implement Claw (Sep 19, 2021)
 		// Get player facing direction
 		Vector facing = p.getEyeLocation().getDirection();
-		Location epicenter = p.getEyeLocation().add(facing.multiply(3));
-		World w = epicenter.getWorld();
+		// Step each iteration
+		Vector deltaD = facing.clone().multiply(0.4d);
+		// Center for Finding Mobs
+		Location ec = p.getEyeLocation();
+		// World where action is being performed
+		World w = p.getWorld();
+		// Size for each box in search
+		double boxSize;
+		// Set for target searching. Can't have Duplicates
+		Set<Entity> targets = new HashSet<>();
 
-		// Check for entity within a close distance
-		assert w != null;
+		for (int i = 1; i <= 10; i++) {
+			// Move ec (epicenter)
+			ec.add(deltaD);
 
-		// Draws a box around the area affected
-//		createBox(epicenter.toVector().add(new Vector(1, 1, 1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(1, 1, -1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(-1, 1, -1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(-1, 1, 1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(1, -1, 1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(1, -1, -1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(-1, -1, -1)).toLocation(w),
-//				epicenter.toVector().add(new Vector(-1, -1, 1)).toLocation(w)
-//		);
+			boxSize = 0.5 * (2.2 - (2.2 * (double) i / 15.4));
 
-		Collection<Entity> mobs = epicenter.getWorld().getNearbyEntities(epicenter, 1, 1, 1);
-		if (mobs.size() == 0) {
-			return false;
+			// Find all mobs in square
+			targets.addAll(w.getNearbyEntities(ec, boxSize, boxSize, boxSize));
+
+			// drawCube(w, ec, boxSize);
 		}
-		// Apply dmg to targets
-		for (Entity mob : mobs) {
-			if (mob instanceof LivingEntity m && m != p) {
-				m.damage(MULTIPLIER, p);
+
+		// Remove player using ability from targeted group
+		targets.remove(p);
+
+		// Damage mobs
+		for (Entity target : targets) {
+			if (target instanceof LivingEntity t) {
+				t.damage(MULTIPLIER, p);
 			}
 		}
+
+		// Draws a box around the area affected
+//		createBox(w,
+//				  ec.toVector().add(new Vector( 2,  1,  2)).toLocation(w),
+//				  ec.toVector().add(new Vector( 2,  1, -2)).toLocation(w),
+//				  ec.toVector().add(new Vector(-2,  1, -2)).toLocation(w),
+//				  ec.toVector().add(new Vector(-2,  1,  2)).toLocation(w),
+//				  ec.toVector().add(new Vector( 2, -1,  2)).toLocation(w),
+//				  ec.toVector().add(new Vector( 2, -1, -2)).toLocation(w),
+//				  ec.toVector().add(new Vector(-2, -1, -2)).toLocation(w),
+//				  ec.toVector().add(new Vector(-2, -1,  2)).toLocation(w)
+//		);
+
+//		Collection<Entity> mobs = ec.getWorld().getNearbyEntities(ec, 2, 1, 2);
+//		if (mobs.size() == 0) {
+//			return false;
+//		}
+		// Apply dmg to targets
+//		for (Entity mob : mobs) {
+//			if (mob instanceof LivingEntity m && m != p) {
+//				m.damage(MULTIPLIER, p);
+//			}
+//		}
 
 		startCooldown();
 		return true;
@@ -180,8 +209,21 @@ public class CustomAbility {
 
 	// !! THIS SHOULD BE REMOVED
 
-	private void createBox(Location A, Location B, Location C, Location D, Location E, Location F, Location G, Location H) {
-		World w = A.getWorld();
+	private void drawCube(World w, Location center, double vertexOffset) {
+		w.spawnParticle(Particle.DRIP_LAVA, center, 1);
+		createBox(w,
+				center.toVector().add(new Vector(-vertexOffset, -vertexOffset, -vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(-vertexOffset, -vertexOffset, vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(vertexOffset, -vertexOffset, vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(vertexOffset, -vertexOffset, -vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(-vertexOffset, vertexOffset, -vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(-vertexOffset, vertexOffset, vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(vertexOffset, vertexOffset, vertexOffset)).toLocation(w),
+				center.toVector().add(new Vector(vertexOffset, vertexOffset, -vertexOffset)).toLocation(w)
+		);
+	}
+
+	private void createBox(World w, Location A, Location B, Location C, Location D, Location E, Location F, Location G, Location H) {
 		assert w != null;
 		// Top Rectangle
 		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, A, 1);

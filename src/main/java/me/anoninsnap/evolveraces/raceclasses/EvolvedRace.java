@@ -181,16 +181,19 @@ public class EvolvedRace {
 	 * Applies the Race Stats to the Player
 	 */
 	private void applyStats() {
+		ConsoleLogger.debugLog(ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.AQUA + ": Expected HP: " + ChatColor.RED + baseHealth);
 		if (player.getMaxHealth() > baseHealth) {
 			// HP goes down
 			player.setHealth(baseHealth);
 			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseHealth);
+			player.setHealthScale(baseHealth); // Might kill the player
 		} else {
 			// HP goes up
 			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseHealth);
 			player.setHealth(baseHealth);
+			player.setHealthScale(baseHealth); // Might kill the player
 		}
-
+		ConsoleLogger.debugLog(ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.AQUA + ": Actual HP: " + ChatColor.RED + player.getHealth());
 		player.setWalkSpeed(baseMovementSpeed);
 	}
 
