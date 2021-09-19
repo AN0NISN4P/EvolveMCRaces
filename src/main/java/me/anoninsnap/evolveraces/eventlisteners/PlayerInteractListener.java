@@ -1,5 +1,6 @@
 package me.anoninsnap.evolveraces.eventlisteners;
 
+import me.anoninsnap.evolveraces.EvolveRaces;
 import me.anoninsnap.evolveraces.PlayerRaceLists;
 import me.anoninsnap.evolveraces.raceclasses.EvolvedRace;
 import org.bukkit.entity.Player;
@@ -9,6 +10,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteractListener implements Listener {
+	private EvolveRaces plugin;
+
+	public PlayerInteractListener(EvolveRaces plugin) {
+		this.plugin = plugin;
+	}
 
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {

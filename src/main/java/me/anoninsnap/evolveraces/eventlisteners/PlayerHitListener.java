@@ -82,6 +82,11 @@ public class PlayerHitListener implements Listener {
 						attacker.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "The Vampire has been Weakened."); // TODO: Special Class for telling players + Config Settings?
 					}
 				}
+				ConsoleLogger.debugLog("PvP: " +
+						ChatColor.RED + attacker.getDisplayName() + ChatColor.RESET + " hit " +
+						ChatColor.RED + defender.getName() + ChatColor.RESET +
+						".\n\tDmg Done: " + event.getFinalDamage());
+
 			} else if (e2 instanceof Mob mob) {
 				// PLAYER HITTING MOB
 
