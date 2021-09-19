@@ -1,4 +1,5 @@
 DebugConsole: false
+DebugDraw: true
 
 World:
   TimeBetweenTicks: 10

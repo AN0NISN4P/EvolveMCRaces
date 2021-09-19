@@ -1,8 +1,9 @@
 package me.anoninsnap.evolveraces.raceclasses.abilities;
 
 public enum CustomAbilityType {
-	DASH, // Dash forwards, hurting any opponent in the way
-	LEAP, // Leap forwards, doing AOE dmg on impact
-	CLAW, // Apply a bleeding effect on hit
+	DASH,  // Dash forwards
+	LEAP,  // Leap forwards
+	CLAW,  // AOE attack (apply a bleed effect?)
 	BLINK, // Teleport a short distance forwards
+	SNIPE, // Single Target, High Damage
 }

@@ -27,7 +27,8 @@ public class EvolvedRace {
 	// TODO: Ability Multiplier skal kunne opdateres (Sep 19, 2021)
 //	private CustomAbility ability = new CustomAbility(CustomAbilityType.DASH, 40, 1.4);
 //	private CustomAbility ability = new CustomAbility(CustomAbilityType.LEAP, 80, 1.5);
-	private CustomAbility ability = new CustomAbility(CustomAbilityType.CLAW, 20, 3);
+//	private CustomAbility ability = new CustomAbility(CustomAbilityType.CLAW, 20, 3);
+	private CustomAbility ability = new CustomAbility(CustomAbilityType.SNIPE, 40, 4);
 //	private CustomAbility ability = new CustomAbility(CustomAbilityType.BLINK, 80, 10);
 
 	private boolean active;

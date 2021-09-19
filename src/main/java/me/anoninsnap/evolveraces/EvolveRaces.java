@@ -2,6 +2,7 @@ package me.anoninsnap.evolveraces;
 
 import me.anoninsnap.evolveraces.commands.CommandManager;
 import me.anoninsnap.evolveraces.development.ConsoleLogger;
+import me.anoninsnap.evolveraces.development.ParticleDraw;
 import me.anoninsnap.evolveraces.eventlisteners.FallDmgListener;
 import me.anoninsnap.evolveraces.eventlisteners.PlayerInteractListener;
 import me.anoninsnap.evolveraces.eventlisteners.PlayerHitListener;
@@ -21,7 +22,6 @@ public final class EvolveRaces extends JavaPlugin {
 	public void onEnable() {
 		// Plugin startup logic
 		noFallDmgList = new ArrayList<>();
-
 
 		// Default Config
 		defaultConfigs();
@@ -52,6 +52,7 @@ public final class EvolveRaces extends JavaPlugin {
 		getConfig().options().copyDefaults();
 		saveDefaultConfig();
 		ConsoleLogger.LOG_TO_CONSOLE = getConfig().getBoolean("DebugConsole");
+		ParticleDraw.DEBUG_DRAW = getConfig().getBoolean("DebugDraw");
 		ConsoleLogger.debugLog(ChatColor.GREEN + "Logging to Console: " + ConsoleLogger.LOG_TO_CONSOLE);
 	}
 

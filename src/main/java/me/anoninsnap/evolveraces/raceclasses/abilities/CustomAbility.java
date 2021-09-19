@@ -1,12 +1,15 @@
 package me.anoninsnap.evolveraces.raceclasses.abilities;
 
 import me.anoninsnap.evolveraces.EvolveRaces;
+import me.anoninsnap.evolveraces.development.ConsoleLogger;
+import me.anoninsnap.evolveraces.development.ParticleDraw;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -54,6 +57,7 @@ public class CustomAbility {
 				case CLAW -> successfulAbilityUse = claw(p);
 				case LEAP -> successfulAbilityUse = leap(p);
 				case BLINK -> successfulAbilityUse = blink(p);
+				case SNIPE -> successfulAbilityUse = snipe(p);
 			}
 		}
 		if (!successfulAbilityUse) {
@@ -84,6 +88,8 @@ public class CustomAbility {
 		Vector deltaD = facing.clone().multiply(0.4d);
 		// Center for Finding Mobs
 		Location ec = p.getEyeLocation();
+		// Offset ec so you don't target all mobs behind you
+		ec.add(deltaD);
 		// World where action is being performed
 		World w = p.getWorld();
 		// Size for each box in search
@@ -100,7 +106,7 @@ public class CustomAbility {
 			// Find all mobs in square
 			targets.addAll(w.getNearbyEntities(ec, boxSize, boxSize, boxSize));
 
-			// drawCube(w, ec, boxSize);
+			ParticleDraw.drawCube(w, ec, boxSize);
 		}
 
 		// Remove player using ability from targeted group
@@ -190,6 +196,38 @@ public class CustomAbility {
 		return true;
 	}
 
+	private boolean snipe(Player p) {
+		World w = p.getWorld();
+		Location playerEyes = p.getEyeLocation();
+		Vector facing = playerEyes.getDirection();
+
+		// Create a RayTrace looking for entities
+		RayTraceResult r = w.rayTraceEntities(playerEyes.clone().add(facing), facing, 60);
+		if (r == null) {
+			return false;
+		}
+
+		// Get Targeted Entity
+		Entity target = r.getHitEntity();
+		// Check if Entity is a Living Mob
+		if (!(target instanceof LivingEntity mob)) {
+			return false;
+		}
+		// Get Distance between player and targeted mob
+		double distance = playerEyes.distance(mob.getLocation());
+		ConsoleLogger.debugLog("Distance between " + p.getDisplayName() + " and their Target: " + distance);
+
+		// Calculate Damage
+		double dmg = MULTIPLIER * Math.log(distance) + 5d;
+
+		// Draw a line from the shooter to the target
+		ParticleDraw.drawLine(Particle.DRIPPING_OBSIDIAN_TEAR, playerEyes, mob.getLocation());
+
+		// Deal Damage
+		mob.damage(dmg, p);
+		return true;
+	}
+
 	/**
 	 * Start a cooldown using the field as a timer
 	 */
@@ -209,64 +247,6 @@ public class CustomAbility {
 
 	// !! THIS SHOULD BE REMOVED
 
-	private void drawCube(World w, Location center, double vertexOffset) {
-		w.spawnParticle(Particle.DRIP_LAVA, center, 1);
-		createBox(w,
-				center.toVector().add(new Vector(-vertexOffset, -vertexOffset, -vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(-vertexOffset, -vertexOffset, vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(vertexOffset, -vertexOffset, vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(vertexOffset, -vertexOffset, -vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(-vertexOffset, vertexOffset, -vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(-vertexOffset, vertexOffset, vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(vertexOffset, vertexOffset, vertexOffset)).toLocation(w),
-				center.toVector().add(new Vector(vertexOffset, vertexOffset, -vertexOffset)).toLocation(w)
-		);
-	}
-
-	private void createBox(World w, Location A, Location B, Location C, Location D, Location E, Location F, Location G, Location H) {
-		assert w != null;
-		// Top Rectangle
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, A, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, B, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, C, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, D, 1);
-
-		// Bottom Rectangle
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, E, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, F, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, G, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, H, 1);
-
-		// Top Rectangle Midpoints
-		line(w, A, B);
-		line(w, B, C);
-		line(w, C, D);
-		line(w, D, A);
-
-		// Bottom Rectangle Midpoints
-		line(w, E, F);
-		line(w, F, G);
-		line(w, G, H);
-		line(w, H, E);
-
-		// Connecting Struts
-		line(w, A, E);
-		line(w, B, F);
-		line(w, C, G);
-		line(w, D, H);
-	}
-
-	private void line(World w, Location p1, Location p2) {
-		Location mid = midPoint(w, p1, p2);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, midPoint(w, p1, mid), 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, mid, 1);
-		w.spawnParticle(Particle.DRIPPING_OBSIDIAN_TEAR, midPoint(w, mid, p2), 1);
-	}
-
-	private Location midPoint(World w, Location pos1, Location pos2) {
-		Vector AminusB = pos1.toVector().subtract(pos2.toVector());
-		return pos2.toVector().add(AminusB.multiply(0.5d)).toLocation(w);
-	}
 
 	// !! THIS SHOULD BE REMOVED
 }
